@@ -136,7 +136,7 @@ function createSkybox(){
 There needs to be a global array of meshes which you will update according to `soundArrayData`. To create this array and fill it, declare some global arrays and use a helper function to fill them. First, declare these constants towards the top of your JavaScript code.
 ```js 
 const numSamples = 60;           //The number of segments in the circle.
-const segBaseRadius = 20;        //The base radius for each segment
+const segBaseRadius = 40;        //The base radius for each segment
 const segBrightness = 50;        
 ```
 Continuing on to the main event,
