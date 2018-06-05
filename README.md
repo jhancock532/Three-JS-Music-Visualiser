@@ -29,7 +29,7 @@ The `soundDataArray` is going to be where we store the music waveform data. The 
 <label for="audioInput" id="audioInputLabel">Choose a WAV file.</label>
 <audio id="sound"></audio>
 ```
-The user inputs a sound file of their choice (preferably a WAV file) through the `input` element above. We then use JavaScript to load the selected file, and start playing it.
+The user inputs a sound file of their choice through the `input` element above. We then use JavaScript to load the selected file, and start playing it.
 ```js
 audioInput.onchange = function() {
   let sound = document.getElementById("sound");    //What element we want to play the audio.
@@ -216,4 +216,4 @@ function getSampleOfSoundData(index, noSampleSections, soundDataArray){
   return average / MAX_SOUND_VALUE;
 }
 ```
-At this stage we have implemented all the basics of our Three JS scene. View the current project in action [here](https://codepen.io/jhancock532/full/qKNWxV) and the final code [here](https://codepen.io/jhancock532/pen/qKNWxV). (Legally) download or convert a WAV of your favourite royalty free tune, and try it out with your music visualiser.
+At this stage we have implemented all the basics of our Three JS scene. View the current project in action [here](https://codepen.io/jhancock532/full/qKNWxV) and the final code [here](https://codepen.io/jhancock532/pen/qKNWxV). Download (Legally) a copy of your favourite royalty free tune, and try it out with your music visualiser.
