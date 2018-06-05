@@ -1,8 +1,15 @@
 # Three JS Music Visualiser
 
 The code can be seen live on CodePen [here](https://codepen.io/jhancock532/full/zaxjzd/).
-Creating a visualiser like this is super easy when you have the framework, so here is a tutorial.
-It's made of three parts. WebAudioAPI, dat.GUI and ThreeJS.
+Creating a visualiser like this is super easy and fun when you have the framework, so here is a tutorial.
+It's made of three parts. WebAudioAPI, dat.GUI and ThreeJS. Some javascript libaries that you will need for this project are
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.2/dat.gui.min.js"></script> 
+<script src="https://codepen.io/jhancock532/pen/VdLmvN"></script> 
+<!-- This last one is a custom OrbitControls script, edited to be compatible with dat.GUI 
+     (I commented out line 661, that's the only change). -->
+```
 
 ## WebAudioAPI
 
@@ -209,5 +216,5 @@ function getSampleOfSoundData(index, noSampleSections, soundDataArray){
   return average / MAX_SOUND_VALUE;
 }
 ```
-At this stage we have implemented all the basics of our Three JS scene. To check whether your code looks like mine, check the your code against the code in this CodePen example. View the live project here and the code here. 
+At this stage we have implemented all the basics of our Three JS scene. To check whether your code looks like mine, check the your code against the code in this CodePen example. View the project in action [here](https://codepen.io/jhancock532/full/qKNWxV) and the code [here](https://codepen.io/jhancock532/pen/qKNWxV). We should now have a functional music visualiser.
 
