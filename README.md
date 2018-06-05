@@ -6,7 +6,7 @@ The code can be seen live on CodePen [here](https://codepen.io/jhancock532/full/
 Creating a visualiser like this is super easy when you have the framework, so here is a quick tutorial.
 It's made of three parts. WebAudioAPI, dat.GUI and ThreeJS.
 
-# WebAudioAPI
+## WebAudioAPI
 
 ```js
 let context = new (window.AudioContext || window.webkitAudioContext)();
