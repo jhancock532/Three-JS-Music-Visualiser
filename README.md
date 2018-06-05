@@ -13,7 +13,7 @@ let soundDataArray;
 
 const MAX_SOUND_VALUE = 256;
 ```
-The `soundDataArray` is going to be where we store the music waveform data. The `context` and `analyser` will do all the processing of the audio for us. What does `soundDataArray` look like? It contains the heights for the bars in the below music visualiser snapshot, and an elements max value is 256.  
+The `soundDataArray` is going to be where we store the music waveform data. The `context` and `analyser` will do all the processing of the audio for us. What does `soundDataArray` look like? It contains the heights for the bars in the below music visualiser snapshot. As you might have guessed, each element in the array has a max value of 256.
 
 ![A series of vertical bars in a row.](http://www.smartjava.org/sites/default/files/localhost_Dev_WebstormProjects_webaudio_example3.html.png)
 
@@ -72,6 +72,64 @@ animate();
 ```
 The audio `analyser` does all the complex work for us with `analyser.getByteFrequencyData();`. Note how we don't try and write to `soundDataArray` if it is `undefined`, as this means we haven't loaded a file. For every frame that we are animating, we are refreshing the `soundDataArray` with the current audio data. The `updateMeshes();` function can then access `soundDataArray` and edit objects to make them dance to the music.
 
+## Three JS
+This library handles all the complexity of creating and rendering 3D scenes. For the source code, I animated a collection of [line objects](https://threejs.org/docs/#api/objects/Line), and a collection of [circle meshes](https://threejs.org/docs/#api/geometries/CircleGeometry).
 
+To get set up, we'll need
+```js
+let scene = new THREE.Scene();                                                                    //The stage which contains everything.
+let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);  //How we see the scene.
+let controls = new THREE.OrbitControls(camera);                                                   //Determines how we control the camera.
+```
+Note that I use a customised THREE.OrbitControls class, which can be found at https://codepen.io/jhancock532/pen/VdLmvN
+I commented out the line event.preventDefault(); in the mouse down function, in order to fix a bug with selecting the preset for the dat.GUI (See line 661). You won't be able to select a preset in dat.GUI with the original OrbitControls class.
+
+Let's tweak the controls parameter to make the camerawork tidy.
+```js
+controls.target = new THREE.Vector3(0,10,0);           //Slightly above (0,0,0) to frame the visual better.
+controls.enableDamping = true;                         //Makes for a smoother camera experience.
+controls.dampingFactor = 0.1;                          
+controls.rotateSpeed = 0.005;                            
+controls.enableKeys = false;
+controls.enablePan = false;
+controls.maxDistance = 400;                            //Determines how far the user can move the camera out by scrolling.
+```
+Finally, create a `renderer` to take in the `scene` and convert it into an image for our screen.
+```js
+let renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );             //Adds the display canvas to the web page.
+
+camera.position.z = 0;
+camera.position.y = 60;
+controls.update();
+```
+We set the camera position to look down onto the scene, and update the `controls` object to let it know where we are.
+
+To make the canvas look pretty, touch it up with some CSS.
+```css
+html, body {
+  overflow: hidden; /*Removes the scrollbars from the webpage*/
+}
+
+canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: none;
+  margin: 0;
+  z-index: -1;
+}
+```
+We've created a `scene`, so it's time to add stuff to it. To stop the scene being entirely black, we add a grey skybox encapsulating it. The grey skybox is a sphere geometry with a double sided grey material applied to it, combined to create a mesh.
+```js
+function createSkybox(){
+  let sphereBox = new THREE.SphereGeometry( 500, 32, 32 );                           //Creating the sphere geometry.
+  let sphereMaterial = new THREE.MeshBasicMaterial( {color: 0x111111, side: 2} );    //Creating a material for the sphere
+  let sphere = new THREE.Mesh( sphereBox, sphereMaterial );                          //Combining geometry and material.
+  scene.add(sphere);                                                                 //Add the result to the scene.
+}
+```
 
 
