@@ -179,7 +179,7 @@ Updating the meshes is quite simple, just a scale effect on the mesh.
 ```js
 function updateMeshes(){
   for (let i = 0; i < numSamples; i++){
-    let sampleLevel = 1; //Fallback value.
+    let sampleLevel = 1; //Fallback value if soundDataArray doesn't exist.
     
     //Carefully access the soundDataArray, as it doesn't exist until the user selects a sound file.
     if ((soundDataArray === undefined) == false) {
@@ -208,6 +208,6 @@ function getSampleOfSoundData(index, noSampleSections, soundDataArray){
   
   return average / MAX_SOUND_VALUE;
 }
-
 ```
+At this stage we have implemented all the basics of our Three JS scene. To check whether your code looks like mine, check the your code against the code in this CodePen example. View the live project here and the code here. 
 
