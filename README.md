@@ -52,14 +52,14 @@ We declare the `source` (where music is coming from), connect the `source` to th
 
 The larger `analyser.fftSize` is, the more detail your sound wave will have, and the larger your `soundDataArray` will be. `analyser.frequencyBinCount` is half the value of `analyser.fftSize` and is the length of `soundDataArray`. Details about `fftSize` can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/fftSize), and `frequencyBinCount` [here](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/frequencyBinCount).
 
-I created two simple methods to process the soundDataArray data neatly, one to get overall volume of the audio (`getAverageOfDataArray()`) and one to get an average from a sample of the array, according to the number of sample sections wanted from the array, and the index of which sample section is required. (`getSampleOfSoundData()`). See the source code for more details.
+I created two simple methods to process the soundDataArray data neatly, one to get overall volume of the audio `getAverageOfDataArray()` and one to get an average from a sample of the array, according to the number of sample sections wanted from the array, and the index of which sample section is required `getSampleOfSoundData()`. See the source code for more details.
 
-`soundDataArray` is updated when the `animate` function loops and we have loaded a audio file to analyse.
+The `soundDataArray` is updated when the `animate` function loops and we have loaded a audio file to analyse.
 ```js
 function animate() {
   requestAnimationFrame(animate); 
   
-  //Update the soundDataArray with the new wave frequency.
+  //Update the soundDataArray with the new sound data.
   if((soundDataArray === undefined) == false){
     analyser.getByteFrequencyData(soundDataArray);
   }
@@ -70,7 +70,7 @@ function animate() {
 }
 animate();
 ```
-The audio `analyser` does all the complex work for us with `analyser.getByteFrequencyData();`. Note how we don't try and write to `soundDataArray` if it is `undefined`, as this means we haven't loaded a file. For every frame that we are animating, we are refreshing the `soundDataArray` with the latest audio frequency data. The `updateMeshes();` function can then access `soundDataArray` and edit objects to make them dance to the music.
+The audio `analyser` does all the complex work for us with `analyser.getByteFrequencyData();`. Note how we don't try and write to `soundDataArray` if it is `undefined`, as this means we haven't loaded a file. For every frame that we are animating, we are refreshing the `soundDataArray` with the current audio data. The `updateMeshes();` function can then access `soundDataArray` and edit objects to make them dance to the music.
 
 
 
