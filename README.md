@@ -26,15 +26,15 @@ The `soundDataArray` is going to be where we store the music waveform data. The 
 The user inputs a sound file of their choice through the input element above. We then use JavaScript to load the selected file, and start playing it.
 ```js
 audioInput.onchange = function() {
-  let sound = document.getElementById("sound"); //What element we want to play the audio.
-  let reader = new FileReader(); //How we load the file.
-  reader.onload = function(e) { //What we do when we load a file.
-    sound.src = this.result;
-    sound.controls = true; //User can pause and play audio.
-    sound.play(); 
+  let sound = document.getElementById("sound");    //What element we want to play the audio.
+  let reader = new FileReader();                   //How we load the file.
+  reader.onload = function(e) {                    //What we do when we load a file.
+    sound.src = this.result;                       //Setting the source for the sound element.
+    sound.controls = true;                         //User can pause and play audio.
+    sound.play();                                  //Start playing the tunes!
   };
-  reader.readAsDataURL(this.files[0]); //This will call the reader.onload function when it finishes loading the file.
-  createAudioObjects();
+  reader.readAsDataURL(this.files[0]);             //This will call the reader.onload function when it finishes loading the file.
+  createAudioObjects();                            
 };
 ```
 So we have the music going, but how does `context` and `analyser` interact with it? That is sorted by `createAudioObjects();`
