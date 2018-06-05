@@ -86,13 +86,13 @@ I commented out the line event.preventDefault(); in the mouse down function, in 
 
 Let's tweak the controls parameter to make the camerawork tidy.
 ```js
-controls.target = new THREE.Vector3(0,10,0);           //Slightly above (0,0,0) to frame the visual better.
-controls.enableDamping = true;                         //Makes for a smoother camera experience.
+controls.target = new THREE.Vector3(0,10,0);       //Slightly above (0,0,0) to frame the visual better.
+controls.enableDamping = true;                     //Makes for a smoother camera experience.
 controls.dampingFactor = 0.1;                          
-controls.rotateSpeed = 0.005;                            
+controls.rotateSpeed = 0.005;                      
 controls.enableKeys = false;
 controls.enablePan = false;
-controls.maxDistance = 400;                            //Determines how far the user can move the camera out by scrolling.
+controls.maxDistance = 400;                        //Determines how far the user can move the camera out by scrolling.
 ```
 Finally, create a `renderer` to take in the `scene` and convert it into an image for our screen.
 ```js
@@ -104,9 +104,7 @@ camera.position.z = 0;
 camera.position.y = 60;
 controls.update();
 ```
-We set the camera position to look down onto the scene, and update the `controls` object to let it know where we are.
-
-To make the canvas look pretty, touch it up with some CSS.
+We set the camera position to look down onto the scene, and update the `controls` object to let it know where the camera is. To make the canvas look pretty, touch it up with some CSS.
 ```css
 html, body {
   overflow: hidden; /*Removes the scrollbars from the webpage*/
@@ -122,7 +120,7 @@ canvas {
   z-index: -1;
 }
 ```
-We've created a `scene`, so it's time to add stuff to it. To stop the scene being entirely black, we add a grey skybox encapsulating it. The grey skybox is a sphere geometry with a double sided grey material applied to it, combined to create a mesh.
+We've created a `scene`, so it's time to add stuff to it. To stop the scene being entirely black, we add a grey skybox encapsulating the camera in it. The grey skybox is a sphere geometry with a grey material applied to it, combined together to create a mesh.
 ```js
 function createSkybox(){
   let sphereBox = new THREE.SphereGeometry( 500, 32, 32 );                           //Creating the sphere geometry.
@@ -131,5 +129,85 @@ function createSkybox(){
   scene.add(sphere);                                                                 //Add the result to the scene.
 }
 ```
+There needs to be a global array of meshes which you will update according to `soundArrayData`. To create this array and fill it, declare some global arrays and use a helper function to fill them.
+```js
+let segmentGeometryArray = [];   //Globally accessible arrays.
+let segmentMaterialArray = [];   //Perhaps could be stored together in an object.
+let segmentsArray = [];
 
+const numSamples = 60;           //The number of segments in the circle.
+const segBaseRadius = 20;        //The base radius for each segment
+const segBrightness = 50;        
+setUpAllArrays();
+
+function setUpAllArrays() {
+  for (let i = 0; i < numSamples; i++){
+    segmentGeometryArray.push(
+      new THREE.CircleGeometry(segBaseRadius, 64, i*2*Math.PI/numSamples, 2*Math.PI/numSamples)
+    );
+
+    segmentMaterialArray.push(new THREE.MeshBasicMaterial( {
+      color: new THREE.Color("hsl("+(i*359)/numSamples+", 100%, "+String(Math.floor(segBrightness))+"%)"),
+      side: 2
+    }));
+    
+    segmentsArray.push(new THREE.Mesh(segmentGeometryArray[i], segmentMaterialArray[i]));
+    segmentsArray[i].rotateX( Math.PI / 2 );   //The circle is initally created in the x-y plane, so we rotate it here flat onto x-z.
+
+    scene.add(segmentsArray[i]);
+  }
+}
+```
+I am creating segments of a circle (like slices of a pie) through `i*2*Math.PI/numSamples, 2*Math.PI/numSamples` in the `CircleGeometry` constructor. To learn more about the constructor for `THREE.CircleGeometry` go [here](https://threejs.org/docs/#api/geometries/CircleGeometry). This is as mathsy as the code gets for now, some slightly more interesting maths can be seen in the source code where I added some springs to the scene.
+
+We have an array of meshes added to the scene, ready and waiting for animation. Remember the `animate` function?
+```js
+function animate() {
+  requestAnimationFrame(animate); 
+  
+  //Update the soundDataArray with the new sound data.
+  if((soundDataArray === undefined) == false){
+    analyser.getByteFrequencyData(soundDataArray);
+  }
+  
+  controls.update();               //Updates the internal camera controls (as you have probably moved it)
+  updateMeshes();                  //Updates the mesh array.
+  renderer.render(scene, camera);  //Render a new frame of the scene.
+}
+```
+Updating the meshes is quite simple, just a scale effect on the mesh. 
+```js
+function updateMeshes(){
+  for (let i = 0; i < numSamples; i++){
+    let sampleLevel = 1; //Fallback value.
+    
+    //Carefully access the soundDataArray, as it doesn't exist until the user selects a sound file.
+    if ((soundDataArray === undefined) == false) {
+      sampleLevel = getSampleOfSoundData(i, numSamples, soundDataArray);
+    }
+
+    segmentsArray[i].scale.set(0.01+sampleLevel,0.01+sampleLevel,1); 
+    segmentsArray[i].rotateZ(0.003);
+  }
+}
+```
+The function `getSampleOfSoundData()` is provided below.
+```js
+//Returns the average of a small sample of the array. Index declares which sample you want from a noSampleSections, ideal for iteration.
+function getSampleOfSoundData(index, noSampleSections, soundDataArray){
+  let sampleSize = Math.floor((soundDataArray.length/2) / noSampleSections); 
+  
+  let minBound = index * sampleSize; 
+  let maxBound = (index + 1) * sampleSize;
+  let sum = 0;
+  
+  for (let i = minBound; i < maxBound; i++){
+    sum += soundDataArray[i];
+  }
+  let average = sum / sampleSize;
+  
+  return average / MAX_SOUND_VALUE;
+}
+
+```
 
