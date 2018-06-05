@@ -7,7 +7,7 @@ It's made of three parts. WebAudioAPI, dat.GUI and ThreeJS. Some javascript liba
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.2/dat.gui.min.js"></script> 
 <script src="https://codepen.io/jhancock532/pen/VdLmvN"></script> 
-<!-- This last one is a custom OrbitControls script, edited to be compatible with dat.GUI 
+<!-- This last one is a custom THREE.OrbitControls script, edited to be compatible with dat.GUI 
      (I commented out line 661, that's the only change). -->
 ```
 
