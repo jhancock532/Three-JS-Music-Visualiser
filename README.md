@@ -17,7 +17,7 @@ Some javascript libaries that you will need for this project are
 ```
 
 ## WebAudioAPI
-*let's analyse some audio data!*
+WebAudioAPI makes everything audio related easy, here we are going to use it to analyse a sound file in real time.
 ```js
 let context = new (window.AudioContext || window.webkitAudioContext)();
 let analyser = context.createAnalyser();
