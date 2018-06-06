@@ -226,4 +226,39 @@ function getSampleOfSoundData(index, noSampleSections, soundDataArray){
 __Part Two Complete!__ At this stage we have implemented all the basics of our Three JS scene. View the current project in action [here](https://codepen.io/jhancock532/full/qKNWxV) and check your code against my current code [here](https://codepen.io/jhancock532/pen/qKNWxV).
 
 ## dat.GUI <p id="section3"></p>
-Coming soon.
+It's nice to be able to directly edit parameters of what your are working on while you are interacting with it, the GUI to do this is what dat.GUI offers. To specify what parameters we want to edit, we first have to create something to store them.
+```js
+//Function notation.
+let segments = new function() {
+  this.numSegments = 60;
+  this.brightness = 34;
+  this.baseRadius = 40;
+}
+```
+```js
+//Object notation.
+let segments = {
+  numSegments: 60,
+  brightness: 34,
+  baseRadius: 40,
+  rotationSpeedMultiplier: 2
+}
+```
+We then create a new dat.GUI object and specify what to include in it.
+```js
+let gui = new dat.GUI();
+
+//Create a folder to neatly contain the parameters to be edited.
+let folder = gui.addFolder('Segments');
+
+//Add the parameters into the folder.
+let segmentNumberController = folder.add(segments,'numSegments',1,255).name("No. of Segments");  
+let segmentBrightnessController = folder.add(segments,'brightness',0,100).name("Brightness");
+let segmentBaseRadiusController = folder.add(segments,'baseRadius',0,100).name("Radius");
+folder.add(segments,'rotationSpeedMultiplier',0,10).name("Speed");
+```
+`.name()` changes how the variable name is displayed. `.add(segments,'numSegments',1,255)` adds the variable `numSegments` from the object `segments` into the GUI, where the user can edit the value in the range from 1 to 255. 
+
+We occasionally assign the results of the `folder.add` to a controller object. This handles the event which gets triggered whenever the value changes. We need to do this in order to 
+
+
