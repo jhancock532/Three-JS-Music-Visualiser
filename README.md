@@ -235,7 +235,22 @@ let segments = {
   rotationSpeedMultiplier: 2
 }
 ```
-We then create a our dat.GUI object and specify what to include in it.
+This object is going to replace the contstants we defined previously. That is, wherever you have `numSamples` in your code, you will need to replace it with `segments.numSegments` and the same for `segBrightness` (segments.brightness) and `segBaseRadius` (segments.baseRadius). I updated the `updateMeshes()` function so now it looks like the following:
+```js
+function updateMeshes(){
+  for (let i = 0; i < segments.numSegments; i++){
+    let sampleLevel = 1;
+    
+    if ((soundDataArray === undefined) == false) {
+      sampleLevel = getSampleOfSoundData(i, segments.numSegments, soundDataArray);
+    }
+    
+    segmentsArray[i].scale.set(0.01+sampleLevel,0.01+sampleLevel,1);
+    segmentsArray[i].rotateZ(0.003*segments.rotationSpeedMultiplier); //note the new speed multiplier variable which the user can control.
+  }
+}
+```
+If your code has been successfully updated with new variables, it's time to work with dat.GUI.
 ```js
 let gui = new dat.GUI();
 
@@ -247,6 +262,8 @@ let segmentNumberController = folder.add(segments,'numSegments',1,255).name("No.
 let segmentBrightnessController = folder.add(segments,'brightness',0,100).name("Brightness");
 let segmentBaseRadiusController = folder.add(segments,'baseRadius',0,100).name("Radius");
 folder.add(segments,'rotationSpeedMultiplier',0,10).name("Speed");
+
+folder.open(); //Displays the folder contents.
 ```
 `.name()` changes how the variable name is displayed. `.add(segments,'numSegments',1,255)` adds the variable `numSegments` from the object `segments` into the GUI, where the user can edit the value in the range from 1 to 255. 
 
@@ -264,7 +281,7 @@ segmentBaseRadiusController.onChange(function(val) {
 });
 ```
 
-With `resetArrays();` emptying all the arrays, running code to remove all the objects from the scene, then creating a skybox and repopulating the arrays (with a new number of segments perhaps).
+`resetArrays();` emptys all the arrays, running code to remove all the objects from the scene, and then creates a skybox and repopulates the arrays (with a new number of segments or new material color perhaps).
 
 ```js
 function resetArrays() {
@@ -283,9 +300,40 @@ function resetArrays() {
 }
 ```
 
-To load and save presets of your parameters, you will need to use a tweaked `THREE.OrbitControls` class due to a conflict between how the camera controller handles mouseDown events and how a `<select>` HTML element works. The edited class can be found [here](https://codepen.io/jhancock532/pen/VdLmvN). I commented out line 661 in the onMouseDown function, which is `event.PreventDefault();`. Edit your dat.GUI initalization to include remembering and preset data in JSON.
+Optional Extra - To load and save presets of your parameters, you will need to use a tweaked `THREE.OrbitControls` class due to a conflict between how the camera controller handles mouseDown events and how a `<select>` HTML element works. The edited class can be found [here](https://codepen.io/jhancock532/pen/VdLmvN). I commented out line 661 in the onMouseDown function, which is `event.PreventDefault();`. 
 
+Here I edit the dat.GUI initalization to include an example of remembering and preset data in JSON.
 ```js
+let presetJSON = {
+  "preset": "Default",
+  "closed": false,
+  "remembered": {
+    "Default": {
+      "0": {
+        "numSegments": 60,
+        "brightness": 34,
+        "baseRadius": 40,
+        "rotationSpeedMultiplier": 2
+      }
+    },
+    "High Detail": {
+      "0": {
+        "numSegments": 255,
+        "brightness": 45.947859589587225,
+        "baseRadius": 34.946758740903064,
+        "rotationSpeedMultiplier": 3.384664865603464
+      }
+    }
+  },
+  "folders": {
+    "Segments": {
+      "preset": "Default",
+      "closed": false,
+      "folders": {}
+    }
+  }
+}
+
 let gui = new dat.GUI({
   load: presetJSON,
   preset: 'Default'
@@ -293,5 +341,7 @@ let gui = new dat.GUI({
 
 gui.remember(segments);
 ```
+The definitive guide to how to use dat.GUI can be found [here](https://workshop.chromeexperiments.com/examples/gui/#1--Basic-Usage) which explains in greater detail how to work with presets (You don't have to type out all that JSON, the settings button generates it for you!).
 
+__Part Three Complete!__ You can now edit how the visualiser looks and functions live while visualising music. From here, I developed the project further by adding springs on top of the circle. There is a lot of different possiblities for development with Three JS, I'm quite inspired by the [amazing range of examples](https://threejs.org/examples/) or the high quality [professional projects](https://threejs.org/). 
 
