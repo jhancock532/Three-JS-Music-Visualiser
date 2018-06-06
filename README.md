@@ -7,13 +7,15 @@ It's made of three parts, WebAudioAPI, ThreeJS and dat.GUI.
 
 ## Getting Started
 
-Some javascript libaries that you will need for this project are
+Some javascript libaries that you will need for this project are as follows. Include these in your `<head></head>`.
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.2/dat.gui.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/three-orbitcontrols@2.1.2/OrbitControls.min.js"></script>
+
+<!-- OPTIONAL - Alternative THREE.OrbitControls script to fix a small conflict with selecting a preset in dat.GUI -->
 <script src="https://codepen.io/jhancock532/pen/VdLmvN"></script> 
-<!-- This last one is a custom THREE.OrbitControls script, edited to be compatible with dat.GUI 
-     (I commented out line 661, that's the only change). -->
+<!-- (I commented out line 661, which is event.PreventDefault(); in the onMouseDown function, that's the only change). -->
 ```
 
 ## WebAudioAPI
@@ -93,9 +95,6 @@ let scene = new THREE.Scene();                                                  
 let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);  //How we see the scene.
 let controls = new THREE.OrbitControls(camera);                                                   //Determines how the user controls the camera.
 ```
-Note that I use a customised THREE.OrbitControls class, which can be found at https://codepen.io/jhancock532/pen/VdLmvN
-I commented out the line `event.preventDefault();` in the mouse down function, in order to fix a bug with selecting the preset for the dat.GUI (See line 661). You won't be able to select a preset in dat.GUI with the original OrbitControls class, but if that doesn't phase you, don't worry about it - use the official edition from a more reliable CDN at `https://cdn.jsdelivr.net/npm/three-orbitcontrols@2.1.2/OrbitControls.min.js`.
-
 Let's tweak the `controls` parameters to make the camerawork smooth and tidy.
 ```js
 controls.target = new THREE.Vector3(0,10,0);       //Slightly above (0,0,0) to frame the visual better.
