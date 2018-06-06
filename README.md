@@ -3,7 +3,7 @@
 The code can be seen live on CodePen [here](https://codepen.io/jhancock532/full/zaxjzd/).
 
 Creating a visualiser like this is super easy and fun when you have the framework, so here is a tutorial for the basics.
-It's made of three parts, WebAudioAPI, ThreeJS and dat.GUI. 
+It's made of three parts, <a href="section1">WebAudioAPI</a>, <a href="section2">ThreeJS</a> and <a href="section3">dat.GUI</a>.
 
 ## Getting Started
 
@@ -18,7 +18,7 @@ Some javascript libaries that you will need for this project are as follows. Inc
 <!-- (I commented out line 661, which is event.PreventDefault(); in the onMouseDown function, that's the only change). -->
 ```
 
-## WebAudioAPI
+## WebAudioAPI <p id="section1"></p>
 WebAudioAPI makes everything audio related easy, here we are going to use it to analyse a sound file in real time.
 ```js
 let context = new (window.AudioContext || window.webkitAudioContext)();
@@ -86,7 +86,7 @@ The audio `analyser` does all the complex work for us with `analyser.getByteFreq
 
 __Part One Complete!__ You should be able to load an audio file and hear it playing. You should be able to log the contents of `soundDataArray` as not being undefined, and containing values from 0-255.
 
-## Three JS
+## Three JS <p id="section2"></p>
 This library handles all the complexity of creating and rendering 3D scenes. For the source code, I animated a collection of [line objects](https://threejs.org/docs/#api/objects/Line) to make springs, and a collection of [circle meshes](https://threejs.org/docs/#api/geometries/CircleGeometry) are segments put together to make one circle. For this tutorial, we shall just focus on the circle segments, with the aim of creating a radial visualiser we can track around in three dimensions. 
 
 To get set up, we'll need
@@ -223,3 +223,6 @@ function getSampleOfSoundData(index, noSampleSections, soundDataArray){
 }
 ```
 __Part Two Complete!__ At this stage we have implemented all the basics of our Three JS scene. View the current project in action [here](https://codepen.io/jhancock532/full/qKNWxV) and check your code against my current code [here](https://codepen.io/jhancock532/pen/qKNWxV).
+
+## dat.GUI <p id="section3"></p>
+Coming soon.
