@@ -1,8 +1,13 @@
 # Three JS Music Visualiser
 
 The code can be seen live on CodePen [here](https://codepen.io/jhancock532/full/zaxjzd/).
-Creating a visualiser like this is super easy and fun when you have the framework, so here is a tutorial.
-It's made of three parts. WebAudioAPI, dat.GUI and ThreeJS. Some javascript libaries that you will need for this project are
+
+Creating a visualiser like this is super easy and fun when you have the framework, so here is a tutorial for the basics.
+It's made of three parts, WebAudioAPI, ThreeJS and dat.GUI. 
+
+## Getting Started
+
+Some javascript libaries that you will need for this project are
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.2/dat.gui.min.js"></script> 
@@ -12,7 +17,7 @@ It's made of three parts. WebAudioAPI, dat.GUI and ThreeJS. Some javascript liba
 ```
 
 ## WebAudioAPI
-
+-let's analyse some audio data!-
 ```js
 let context = new (window.AudioContext || window.webkitAudioContext)();
 let analyser = context.createAnalyser();
