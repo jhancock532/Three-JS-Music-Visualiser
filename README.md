@@ -28,13 +28,14 @@ const MAX_SOUND_VALUE = 256;
 The `soundDataArray` is going to be where we store the music waveform data. The `context` and `analyser` will do all the processing of the audio for us. `soundDataArray` will contain the frequency spectrum data for the music, that looks like the heights of the bars in the below music visualiser snapshot. Each element in `soundDataArray` has a max value of 256.
 
 ![A series of vertical bars in a row.](http://www.smartjava.org/sites/default/files/localhost_Dev_WebstormProjects_webaudio_example3.html.png)
-*some HTML to let the user pick a file and then play it*
+
+Here is the HTML we will need to load and play the audio file.
 ```html
 <input type="file" id="audioInput"/>
-<label for="audioInput" id="audioInputLabel">Choose a WAV file.</label>
+<label for="audioInput" id="audioInputLabel">Choose a sound file.</label>
 <audio id="sound"></audio>
 ```
-The user inputs a sound file of their choice through the `input` element above. We then use JavaScript to load the selected file, and start playing it.
+The user inputs a sound file of their choice through the `input` element above. We then use the following JavaScript to load the selected file, and start playing it.
 ```js
 audioInput.onchange = function() {
   let sound = document.getElementById("sound");    //What element we want to play the audio.
@@ -48,7 +49,7 @@ audioInput.onchange = function() {
   createAudioObjects();                            
 };
 ```
-We have the music going, to get `context` and `analyser` to interact with it we call `createAudioObjects();`
+You should now be able to hear the audio playing, to get our `context` and `analyser` to interact with it we call `createAudioObjects();`
 ```js
 //Connects the audio source to the analyser and creating a suitably sized array to hold the frequency data.
 function createAudioObjects() {
@@ -59,9 +60,9 @@ function createAudioObjects() {
   soundDataArray = new Uint8Array(analyser.frequencyBinCount);
 }
 ```
-We declare the `source` (where music is coming from), connect the `source` to the `analyser` and finally connect the `analyser` to the final `context.destination`. If you didn't do this last step, you wouldn't hear anything. You are diverting the audio data through a `analyser` bypass, and you reconnect it to where it would originally output. A more detailed explanation can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API).
+We declare the `source` (where music is coming from), connect the `source` to the `analyser` and then connect the `analyser` to the  `context.destination`. If you didn't do this last step, you wouldn't hear anything. You are diverting the audio data through a `analyser` bypass, and you reconnect it to where it would originally output. A more detailed explanation can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API).
 
-The larger `analyser.fftSize` is, the more detail you will have, and the larger your `soundDataArray` will be. `analyser.frequencyBinCount` is half the value of `analyser.fftSize` and is the length of `soundDataArray`. Details about `fftSize` can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/fftSize), and `frequencyBinCount` [here](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/frequencyBinCount). 
+The larger `analyser.fftSize` is, the the larger your `soundDataArray` will be (and the more detail of the sound you will have). `analyser.frequencyBinCount` is half the value of `analyser.fftSize` and will be the length of `soundDataArray`. Details about `fftSize` can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/fftSize), and `frequencyBinCount` [here](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/frequencyBinCount), but aren't vital to know past this point.
 
 The `soundDataArray` is updated when the `animate` function loops and we have loaded a audio file to analyse.
 ```js
@@ -79,10 +80,12 @@ function animate() {
 }
 animate();
 ```
-The audio `analyser` does all the complex work for us with `analyser.getByteFrequencyData();`. Note how we don't try and write to `soundDataArray` if it is `undefined`, as this means we haven't loaded a file. For every frame that we are animating, we are refreshing the `soundDataArray` with the current audio data. The `updateMeshes();` function can then access `soundDataArray` and edit objects to make them dance to the music.
+The audio `analyser` does all the complex work for us with `analyser.getByteFrequencyData();`. Note how the code doesn't try to write to `soundDataArray` if it is `undefined`, as this means we haven't loaded a file. For every frame that we are animating, we are refreshing the `soundDataArray` with the current audio data. The `updateMeshes();` function can then access `soundDataArray` and edit objects to make them dance to the music.
+
+__Part One Complete!__ You should be able to load an audio file and hear it playing. You should be able to log the contents of `soundDataArray` as not being undefined, and containing values from 0-255.
 
 ## Three JS
-This library handles all the complexity of creating and rendering 3D scenes. For the source code, I animated a collection of [line objects](https://threejs.org/docs/#api/objects/Line), and a collection of [circle meshes](https://threejs.org/docs/#api/geometries/CircleGeometry). To get started, we shall just focus on circle meshes, with the aim of creating a radial visualiser we have track around in three dimensions.
+This library handles all the complexity of creating and rendering 3D scenes. For the source code, I animated a collection of [line objects](https://threejs.org/docs/#api/objects/Line) to make springs, and a collection of [circle meshes](https://threejs.org/docs/#api/geometries/CircleGeometry) are segments put together to make one circle. For this tutorial, we shall just focus on the circle segments, with the aim of creating a radial visualiser we can track around in three dimensions. 
 
 To get set up, we'll need
 ```js
@@ -91,9 +94,9 @@ let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHei
 let controls = new THREE.OrbitControls(camera);                                                   //Determines how the user controls the camera.
 ```
 Note that I use a customised THREE.OrbitControls class, which can be found at https://codepen.io/jhancock532/pen/VdLmvN
-I commented out the line `event.preventDefault();` in the mouse down function, in order to fix a bug with selecting the preset for the dat.GUI (See line 661). You won't be able to select a preset in dat.GUI with the original OrbitControls class, but if that doesn't phase you, don't worry about it.
+I commented out the line `event.preventDefault();` in the mouse down function, in order to fix a bug with selecting the preset for the dat.GUI (See line 661). You won't be able to select a preset in dat.GUI with the original OrbitControls class, but if that doesn't phase you, don't worry about it - use the official edition from a more reliable CDN at `https://cdn.jsdelivr.net/npm/three-orbitcontrols@2.1.2/OrbitControls.min.js`.
 
-Let's tweak the controls parameter to make the camerawork smooth and tidy.
+Let's tweak the `controls` parameters to make the camerawork smooth and tidy.
 ```js
 controls.target = new THREE.Vector3(0,10,0);       //Slightly above (0,0,0) to frame the visual better.
 controls.enableDamping = true;                     //Makes for a smoother camera experience.
@@ -103,7 +106,7 @@ controls.enableKeys = false;
 controls.enablePan = false;
 controls.maxDistance = 400;                        //Determines how far the user can move the camera out by scrolling.
 ```
-Finally, create a `renderer` to take in the `scene` and convert it into an image for our screen.
+Finally, create a `renderer` to take in the `scene` and convert it to an image for our screen.
 ```js
 let renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -111,7 +114,7 @@ document.body.appendChild( renderer.domElement );             //Adds the display
 
 camera.position.z = 0;
 camera.position.y = 60;
-controls.update();
+controls.update();                                            //Controls need to be updated after every camera position change.
 ```
 We set the camera position to look down onto the scene, and update the `controls` object to let it know where the camera is. To make the canvas look pretty, touch it up with some CSS.
 ```css
@@ -129,7 +132,7 @@ canvas {
   z-index: -1;
 }
 ```
-We've created a `scene`, so it's time to add stuff to it. To stop the scene being entirely black, we add a grey skybox encapsulating the camera in it. The grey skybox is a sphere geometry with a grey material applied to it, combined together to create a mesh.
+We've created a `scene`, so it's time to add stuff into it. To stop the scene being entirely black, we add a grey skybox encapsulating the camera in it. The grey skybox is a sphere geometry with a grey material applied to it, combined together to create a mesh.
 ```js
 function createSkybox(){
   let sphereBox = new THREE.SphereGeometry( 500, 32, 32 );                           //Creating the sphere geometry.
@@ -138,13 +141,15 @@ function createSkybox(){
   scene.add(sphere);                                                                 //Add the result to the scene.
 }
 ```
-There needs to be a global array of meshes which you will update according to `soundArrayData`. To create this array and fill it, declare some global arrays and use a helper function to fill them. First, declare these constants towards the top of your JavaScript code.
+You can experiement with the size and colour of this sphere, tweak `500` to `10` to see it from the outside, and `0x111111` to `0xff0000` to make it red. More information about `SphereGeometry` can be found [here](https://threejs.org/docs/#api/geometries/SphereGeometry), and `MeshBasicMaterial` [here](https://threejs.org/docs/#api/materials/MeshBasicMaterial).
+
+We now create a global array of meshes which get updated according to `soundArrayData`. To create this array and fill it, declare some global arrays and use a helper function to fill them. First, declare these constants towards the top of your JavaScript code.
 ```js 
 const numSamples = 60;           //The number of segments in the circle.
-const segBaseRadius = 40;        //The base radius for each segment
+const segBaseRadius = 40;        
 const segBrightness = 50;        
 ```
-Continuing on to the main event,
+These will determine how our visualiser looks. Continuing on to the main event,
 ```js
 let segmentGeometryArray = [];   //Globally accessible arrays.
 let segmentMaterialArray = [];   //Perhaps could be stored together in an object.
@@ -154,9 +159,7 @@ setUpAllArrays();
 
 function setUpAllArrays() {
   for (let i = 0; i < numSamples; i++){
-    segmentGeometryArray.push(
-      new THREE.CircleGeometry(segBaseRadius, 64, i*2*Math.PI/numSamples, 2*Math.PI/numSamples)
-    );
+    segmentGeometryArray.push( new THREE.CircleGeometry(segBaseRadius, 64, i*2*Math.PI/numSamples, 2*Math.PI/numSamples) );
 
     segmentMaterialArray.push(new THREE.MeshBasicMaterial( {
       color: new THREE.Color("hsl("+(i*359)/numSamples+", 100%, "+String(Math.floor(segBrightness))+"%)"),
@@ -164,13 +167,13 @@ function setUpAllArrays() {
     }));
     
     segmentsArray.push(new THREE.Mesh(segmentGeometryArray[i], segmentMaterialArray[i]));
-    segmentsArray[i].rotateX( Math.PI / 2 );   //The circle is initally created in the x-y plane, so we rotate it here flat onto x-z.
+    segmentsArray[i].rotateX( Math.PI / 2 ); //The circle is initally created in the x-y plane, so we rotate it here flat onto x-z.
 
-    scene.add(segmentsArray[i]);
+    scene.add(segmentsArray[i]);             //Add the segment (circle mesh) to the scene.
   }
 }
 ```
-I am creating segments of a circle (like slices of a pie) iteratively through `i*2*Math.PI/numSamples, 2*Math.PI/numSamples` in the `CircleGeometry` constructor. For intuition, the code is iteratively adding segments one by one to make a circle. To learn more about the constructor for `THREE.CircleGeometry` go [here](https://threejs.org/docs/#api/geometries/CircleGeometry). 
+I am creating segments of a circle (like slices of a pie) iteratively through `i*2*Math.PI/numSamples, 2*Math.PI/numSamples` in the `CircleGeometry` constructor. For intuition, the code is adding segments together one by one to make a circle. To learn more about the constructor for `THREE.CircleGeometry` go [here](https://threejs.org/docs/#api/geometries/CircleGeometry).
 
 We have an array of meshes added to the scene, ready and waiting for animation. Back to the `animate` function
 ```js
@@ -191,15 +194,14 @@ Updating the meshes is quite simple, being a scale effect on the mesh and a rota
 ```js
 function updateMeshes(){
   for (let i = 0; i < numSamples; i++){
+  
     let sampleLevel = 1; //Fallback value if soundDataArray doesn't exist.
-    
-    //Carefully access the soundDataArray, as it doesn't exist until the user selects a sound file.
     if ((soundDataArray === undefined) == false) {
       sampleLevel = getSampleOfSoundData(i, numSamples, soundDataArray);
     }
 
-    segmentsArray[i].scale.set(0.01+sampleLevel,0.01+sampleLevel,1); 
-    segmentsArray[i].rotateZ(0.003);
+    segmentsArray[i].scale.set(0.01+sampleLevel,0.01+sampleLevel,1);  //Scale the mesh on x,y,z planes. z value doens't matter.
+    segmentsArray[i].rotateZ(0.003);                                  //Rotate the mesh around the z axis.
   }
 }
 ```
@@ -221,4 +223,4 @@ function getSampleOfSoundData(index, noSampleSections, soundDataArray){
   return average / MAX_SOUND_VALUE;
 }
 ```
-At this stage we have implemented all the basics of our Three JS scene. View the current project in action [here](https://codepen.io/jhancock532/full/qKNWxV) and the final code [here](https://codepen.io/jhancock532/pen/qKNWxV). Download (Legally) a copy of your favourite royalty free tune, and try it out with your music visualiser.
+__Part Two Complete!__ At this stage we have implemented all the basics of our Three JS scene. View the current project in action [here](https://codepen.io/jhancock532/full/qKNWxV) and check your code against my current code [here](https://codepen.io/jhancock532/pen/qKNWxV).
