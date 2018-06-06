@@ -2,7 +2,7 @@
 
 The code can be seen live on CodePen [here](https://codepen.io/jhancock532/full/zaxjzd/).
 
-Creating a visualiser like this is easy and fun when you have the framework, below is a tutorial for the all the essentials.
+Creating a visualiser like this is easy and fun when you have the framework, below is a tutorial for the all the essentials to make one for yourself.
 
 It's made of three parts, <a href="https://github.com/jhancock532/Three-JS-Music-Visualiser/blob/master/README.md#webaudioapi-">WebAudioAPI</a>, <a href="https://github.com/jhancock532/Three-JS-Music-Visualiser/blob/master/README.md#three-js-">ThreeJS</a> and <a href="https://github.com/jhancock532/Three-JS-Music-Visualiser/blob/master/README.md#datgui-">dat.GUI</a>.
 
