@@ -62,7 +62,7 @@ function createAudioObjects() {
   soundDataArray = new Uint8Array(analyser.frequencyBinCount);
 }
 ```
-We declare the `source` (where music is coming from), connect the `source` to the `analyser` and then connect the `analyser` to the  `context.destination`. If you didn't do this last step, you wouldn't hear anything. You are diverting the audio data through a `analyser` bypass, and you reconnect it to where it would originally output. A more detailed explanation can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API).
+We declare the `source` (where music is coming from), connect the `source` to the `analyser` and then connect the `analyser` to the  `context.destination`. If you didn't do this last step, you wouldn't hear anything. You are diverting the audio data through a `analyser` bypass, and you reconnect it to where it would originally output. The developer's explanation can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) in the offical docs.
 
 The larger `analyser.fftSize` is, the the larger your `soundDataArray` will be (and the more detail of the sound you will have). `analyser.frequencyBinCount` is half the value of `analyser.fftSize` and will be the length of `soundDataArray`. Details about `fftSize` can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/fftSize), and `frequencyBinCount` [here](https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/frequencyBinCount), but aren't vital to know past this point.
 
