@@ -77,18 +77,18 @@ function animate() {
     analyser.getByteFrequencyData(soundDataArray);
   }
   
-  controls.update();              //Not audio related.
-  updateMeshes();                 //Not audio related.
-  renderer.render(scene, camera); //Not audio related.
+  //controls.update();              //Not audio related. See part 2, Three JS!
+  //updateMeshes();                 //Not audio related.
+  //renderer.render(scene, camera); //Not audio related.
 }
 animate();
 ```
 The audio `analyser` does all the complex work for us with `analyser.getByteFrequencyData();`. Note how the code doesn't try to write to `soundDataArray` if it is `undefined`, as this means we haven't loaded a file. For every frame that we are animating, we are refreshing the `soundDataArray` with the current audio data. The `updateMeshes();` function can then access `soundDataArray` and edit objects to make them dance to the music.
 
-__Part One Complete!__ You should be able to load an audio file and hear it playing. You should be able to log the contents of `soundDataArray` as not being undefined, and containing values from 0-255.
+__Part One Complete!__ You should be able to load an audio file and hear it playing. You should be able to `console.log` the contents of `soundDataArray` as not being undefined within the `animate` function, and as containing values from 0-255.
 
 ## Three JS <p id="section2"></p>
-This library handles all the complexity of creating and rendering 3D scenes. For the source code, I animated a collection of [line objects](https://threejs.org/docs/#api/objects/Line) to make springs, and a collection of [circle meshes](https://threejs.org/docs/#api/geometries/CircleGeometry) are segments put together to make one circle. For this tutorial, we shall just focus on the circle segments, with the aim of creating a radial visualiser we can track around in three dimensions. 
+This library handles all the complexity of creating and rendering 3D scenes. For the source code, I animated a collection of [line objects](https://threejs.org/docs/#api/objects/Line) to make springs, and a collection of [circle meshes](https://threejs.org/docs/#api/geometries/CircleGeometry) are segments put together to make one circle. For this tutorial, we shall just focus on the circle segments, with the aim of creating a radial visualiser we can track the camera around in three dimensions. 
 
 To get set up, we'll need
 ```js
@@ -102,7 +102,7 @@ controls.target = new THREE.Vector3(0,10,0);       //Slightly above (0,0,0) to f
 controls.enableDamping = true;                     //Makes for a smoother camera experience.
 controls.dampingFactor = 0.1;                          
 controls.rotateSpeed = 0.005;                      
-controls.enableKeys = false;
+controls.enableKeys = false;                       
 controls.enablePan = false;
 controls.maxDistance = 400;                        //Determines how far the user can move the camera out by scrolling.
 ```
