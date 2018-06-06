@@ -345,3 +345,4 @@ The definitive guide to how to use dat.GUI can be found [here](https://workshop.
 
 __Part Three Complete!__ You can now edit how the visualiser looks and functions live while visualising music. From here, I developed the project further by adding springs on top of the circle. There is a lot of different possiblities for development with Three JS, I'm quite inspired by the [amazing range of examples](https://threejs.org/examples/) or the high quality [professional projects](https://threejs.org/). 
 
+My code for part two looks like [this](https://codepen.io/jhancock532/pen/QxEeWg). Don't hesitate to leave any questions or suggestions, I'm sure there are improvements to be made to this tutorial. Thanks for reading.
