@@ -17,7 +17,7 @@ Some javascript libaries that you will need for this project are
 ```
 
 ## WebAudioAPI
--let's analyse some audio data!-
+*let's analyse some audio data!*
 ```js
 let context = new (window.AudioContext || window.webkitAudioContext)();
 let analyser = context.createAnalyser();
@@ -25,10 +25,10 @@ let soundDataArray;
 
 const MAX_SOUND_VALUE = 256;
 ```
-The `soundDataArray` is going to be where we store the music waveform data. The `context` and `analyser` will do all the processing of the audio for us. What does `soundDataArray` look like? It contains the heights for the bars in the below music visualiser snapshot. Each element in the array has a max value of 256.
+The `soundDataArray` is going to be where we store the music waveform data. The `context` and `analyser` will do all the processing of the audio for us. `soundDataArray` will contain the frequency spectrum data for the music, that looks like the heights of the bars in the below music visualiser snapshot. Each element in `soundDataArray` has a max value of 256.
 
 ![A series of vertical bars in a row.](http://www.smartjava.org/sites/default/files/localhost_Dev_WebstormProjects_webaudio_example3.html.png)
-
+*some HTML to let the user pick a file and then play it*
 ```html
 <input type="file" id="audioInput"/>
 <label for="audioInput" id="audioInputLabel">Choose a WAV file.</label>
