@@ -226,17 +226,8 @@ function getSampleOfSoundData(index, noSampleSections, soundDataArray){
 __Part Two Complete!__ At this stage we have implemented all the basics of our Three JS scene. View the current project in action [here](https://codepen.io/jhancock532/full/qKNWxV) and check your code against my current code [here](https://codepen.io/jhancock532/pen/qKNWxV).
 
 ## dat.GUI <p id="section3"></p>
-It's nice to be able to directly edit parameters of what your are working on while you are interacting with it, the GUI to do this is what dat.GUI offers. To specify what parameters we want to edit, we first have to create something to store them.
+It's nice to be able to directly edit parameters of what you are working on while you are interacting with it, the GUI to do this is what dat.GUI offers. To specify what parameters we want to edit, we first have to create an object to store them.
 ```js
-//Function notation.
-let segments = new function() {
-  this.numSegments = 60;
-  this.brightness = 34;
-  this.baseRadius = 40;
-}
-```
-```js
-//Object notation.
 let segments = {
   numSegments: 60,
   brightness: 34,
@@ -244,7 +235,7 @@ let segments = {
   rotationSpeedMultiplier: 2
 }
 ```
-We then create a new dat.GUI object and specify what to include in it.
+We then create a our dat.GUI object and specify what to include in it.
 ```js
 let gui = new dat.GUI();
 
@@ -259,6 +250,48 @@ folder.add(segments,'rotationSpeedMultiplier',0,10).name("Speed");
 ```
 `.name()` changes how the variable name is displayed. `.add(segments,'numSegments',1,255)` adds the variable `numSegments` from the object `segments` into the GUI, where the user can edit the value in the range from 1 to 255. 
 
-We occasionally assign the results of the `folder.add` to a controller object. This handles the event which gets triggered whenever the value changes. We need to do this in order to 
+For the first three additions, we assign the results of `folder.add` to controller objects. These handle the events which get triggered whenever the user changes a value. For the first three variables, editing them will require a reset of the scene and mesh arrays, so we call a `resetScene();` function when they change.
+
+```js
+segmentNumberController.onChange(function(val) {
+  resetArrays();
+});
+segmentBrightnessController.onChange(function(val) {
+  resetArrays();
+});
+segmentBaseRadiusController.onChange(function(val) {
+  resetArrays();
+});
+```
+
+With `resetArrays();` emptying all the arrays, running code to remove all the objects from the scene, then creating a skybox and repopulating the arrays (with a new number of segments perhaps).
+
+```js
+function resetArrays() {
+  segmentGeometryArray = [];
+  segmentMaterialArray = [];
+  segmentsArray = [];
+  
+  //Code to remove all objects from a scene.
+  for(var i = scene.children.length - 1; i >= 0; i--){
+     obj = scene.children[i];
+     scene.remove(obj);
+  }
+  
+  createSkybox();
+  setUpAllArrays();
+}
+```
+
+To load and save presets of your parameters, you will need to use a tweaked `THREE.OrbitControls` class due to a conflict between how the camera controller handles mouseDown events and how a `<select>` HTML element works. The edited class can be found [here](https://codepen.io/jhancock532/pen/VdLmvN). I commented out line 661 in the onMouseDown function, which is `event.PreventDefault();`. Edit your dat.GUI initalization to include remembering and preset data in JSON.
+
+```js
+let gui = new dat.GUI({
+  load: presetJSON,
+  preset: 'Default'
+});
+
+gui.remember(segments);
+```
 
 
